@@ -92,5 +92,12 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  // Validate password authentication with bcrypt
+  User.prototype.isValidPassword = async function(password) {
+    const user = this;
+    const compare = await bcryptjs.compare(password, user.password);
+    return compare;
+  };
+
   return User;
 };

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server-express';
 
 export default gql`
   type User {
@@ -32,5 +32,6 @@ export default gql`
       email: String!
       password: String!
     ): User
+    login(netId: String!, password: String!): String
   }
 `;
