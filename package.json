@@ -1,0 +1,37 @@
+{
+  "name": "etd",
+  "version": "1.0.0",
+  "description": "An electronic thesis & dissertation submissionn workflow application.",
+  "main": "index.js",
+  "author": "Chris Eady",
+  "license": "MIT",
+  "scripts": {
+    "start": "NODE_ENV=development node -r esm .",
+    "dev": "NODE_ENV=development nodemon -r esm"
+  },
+  "dependencies": {
+    "apollo-server": "^2.1.0",
+    "apollo-server-express": "^2.1.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^6.1.0",
+    "esm": "^3.0.84",
+    "express": "^4.16.4",
+    "graphql": "^14.0.2",
+    "graphql-voyager": "^1.0.0-rc.26",
+    "mysql2": "^1.6.3",
+    "sequelize": "^4.41.0",
+    "sequelize-cli": "^5.3.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "nodemon": "^1.18.5",
+    "prettier": "^1.14.3"
+  }
+}
