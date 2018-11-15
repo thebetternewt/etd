@@ -8,15 +8,18 @@ const { Op } = Sequelize;
 export default {
   User: {
     submissions: user => user.getSubmissions(),
-    messages: async user => {
-      const submissions = await user.getSubmissions();
-      const submissionIds = submissions.map(sub => sub.id);
-      return Message.findAll({
-        where: { submissionId: { [Op.in]: submissionIds } },
-      });
-    },
+    messages: async user =>
+      user.getMessages({ order: [['createdAt', 'DESC']] }),
   },
   Query: {
+    me: async (parent, args, { user }) => {
+      if (!user) {
+        throw new AuthenticationError('You are not authenticated!');
+      }
+
+      // user is authenticated
+      return user;
+    },
     user: (root, { id }) => User.findById(id),
     users: (root, args, { user }) => {
       if (!user) {

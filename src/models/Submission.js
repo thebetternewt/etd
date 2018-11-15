@@ -66,16 +66,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
-          notEmpty: true,
+          isIn: [['MSU_ONLY', 'PATENT', 'WORLDWIDE']],
         },
       },
       restrictionYears: {
         allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 1,
-        validate: {
-          isIn: [['MSU_ONLY', 'PATENT', 'WORLDWIDE']],
-        },
       },
       defenseDate: {
         type: DataTypes.DATE,
@@ -117,6 +114,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         references: {
           model: 'Users',
+          key: 'id',
+        },
+      },
+      departmentId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Departments',
           key: 'id',
         },
       },

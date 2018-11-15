@@ -8,13 +8,14 @@ export default gql`
     """
     content: String!
     submission: Submission!
+    recipient: User!
     read: Boolean!
     createdAt: String!
   }
 
   extend type Query {
     message(id: ID!): Message
-    messages(submissionId: ID): [Message!]!
+    messages(submissionId: ID, recipientId: ID): [Message!]!
   }
 
   extend type Mutation {

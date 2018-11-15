@@ -60,11 +60,6 @@ export default gql`
       availability: AvailabilityType!
       restrictionYears: Int
       defenseDate: String
-      readyForFinal: Boolean!
-      submittedToUmi: Boolean!
-      approved: Boolean!
-      approvalDate: String
-      userId: ID!
       degreeId: ID!
       departmentId: ID!
       semesterId: ID!
@@ -88,10 +83,13 @@ export default gql`
       submittedToUmi: Boolean
       approved: Boolean
       approvalDate: String
-      userId: ID
       degreeId: ID
       departmentId: ID
       semesterId: ID
     ): Submission
+  }
+
+  extend type Subscription {
+    submissionAdded(recipientId: ID!): Message
   }
 `;

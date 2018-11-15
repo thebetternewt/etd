@@ -4,7 +4,8 @@ export default {
   SubmissionStatusType: {
     PENDING: 'PENDING',
     ASSIGNED: 'ASSIGNED',
-    COMPLETE: 'COMPLETE',
+    CHANGES_REQUIRED: 'CHANGES_REQUIRED',
+    APPROVED: 'APPROVED',
   },
 
   SubmissionReview: {
@@ -13,7 +14,17 @@ export default {
   },
   Query: {
     submissionReview: (root, { id }) => SubmissionReview.findByPk(id),
-    submissionReviews: () => SubmissionReview.findAll(),
+    submissionReviews: (root, { submissionId }) => {
+      const searchParams = {};
+
+      if (submissionId) {
+        searchParams.submissionId = submissionId;
+      }
+      return SubmissionReview.findAll({
+        where: searchParams,
+        order: [['updatedAt', 'DESC']],
+      });
+    },
   },
   Mutation: {
     addSubmissionReview: (root, args) =>

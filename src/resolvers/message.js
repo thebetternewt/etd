@@ -3,16 +3,24 @@ import { Message } from '../models';
 export default {
   Message: {
     submission: message => message.getSubmission(),
+    recipient: message => message.getRecipient(),
   },
   Query: {
     message: (root, { id }) => Message.findByPk(id),
-    messages: (root, { submissionId }) => {
+    messages: (root, { submissionId, recipientId }) => {
       const searchParams = {};
 
       if (submissionId) {
         searchParams.submissionId = submissionId;
       }
-      Message.findAll({ where: searchParams });
+      if (recipientId) {
+        searchParams.recipientId = recipientId;
+      }
+
+      return Message.findAll({
+        where: searchParams,
+        order: [['createdAt', 'DESC']],
+      });
     },
   },
   Mutation: {

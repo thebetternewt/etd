@@ -2,24 +2,39 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import MenuBar from './MenuBar';
+import SideDrawer from './SideDrawer';
+import { isAuthenticated } from '../../apollo/client';
+
+const drawerWidth = 320;
 
 const styles = theme => ({
   content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
+    minHeight: 'calc(100vh - 60px)',
+    backgroundColor: '#eee',
     marginTop: '60px',
     padding: theme.spacing.unit * 3,
-    minWidth: 0, // So the Typography noWrap works
   },
 });
 
 const Layout = props => {
   const { classes, children } = props;
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <>
       <MenuBar />
-      <main className={classes.content}>{children}</main>
-    </div>
+      <>
+        {isAuthenticated() ? (
+          <SideDrawer width={drawerWidth} />
+        ) : (
+          <div style={{ width: drawerWidth }} />
+        )}
+        <main
+          className={classes.content}
+          style={{ marginLeft: isAuthenticated() ? drawerWidth : 0 }}
+        >
+          {children}
+        </main>
+      </>
+    </>
   );
 };
 

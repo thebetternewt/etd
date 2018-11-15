@@ -90,6 +90,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'Reviews',
       foreignKey: 'reviewerId',
     });
+    this.hasMany(models.Message, { foreignKey: 'recipientId' });
   };
 
   // Validate password authentication with bcrypt

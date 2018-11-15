@@ -4,7 +4,8 @@ export default gql`
   enum SubmissionStatusType {
     PENDING
     ASSIGNED
-    COMPLETE
+    APPROVED
+    CHANGES_REQUIRED
   }
 
   type SubmissionReview {

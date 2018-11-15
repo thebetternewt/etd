@@ -20,6 +20,14 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id',
         },
       },
+      recipientId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+      },
       read: {
         allowNull: false,
         type: DataTypes.BOOLEAN,
@@ -30,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Message.associate = function(models) {
     this.belongsTo(models.Submission);
+    this.belongsTo(models.User, { as: 'Recipient', foreignKey: 'recipientId' });
   };
   return Message;
 };

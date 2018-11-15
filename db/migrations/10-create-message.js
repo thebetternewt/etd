@@ -19,6 +19,14 @@ module.exports = {
           key: 'id',
         },
       },
+      recipientId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+      },
       read: {
         allowNull: false,
         type: Sequelize.BOOLEAN,

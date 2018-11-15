@@ -2,21 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
-// import client from './apollo/client';
-// import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
-// import MomentUtils from 'material-ui-pickers/utils/moment-utils';
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import MomentUtils from '@date-io/moment';
+import client from './apollo/client';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ScrollToTop from './components/common/ScrollToTop';
 
-
 const app = (
-  <Router>
-    <ScrollToTop>
-      <App />
-    </ScrollToTop>
-  </Router>
+  <ApolloProvider client={client}>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Router>
+        <ScrollToTop>
+          <App />
+        </ScrollToTop>
+      </Router>
+    </MuiPickersUtilsProvider>
+  </ApolloProvider>
 );
 
 ReactDOM.render(app, document.getElementById('root'));
