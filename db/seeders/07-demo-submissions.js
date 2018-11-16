@@ -21,9 +21,9 @@ module.exports = {
           degreeId: 1,
           departmentId: 1,
           semesterId: 1,
-          readyForFinal: false,
-          submittedToUmi: false,
-          approved: false,
+          readyForFinal: true,
+          submittedToUmi: true,
+          approved: true,
         },
         {
           authorFirstName: 'Bear',

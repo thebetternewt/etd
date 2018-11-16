@@ -54,6 +54,7 @@ class Dashboard extends Component {
             style={{
               width: 400,
               justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <Query query={SUBMISSIONS_QUERY} fetchPolicy="network-only">

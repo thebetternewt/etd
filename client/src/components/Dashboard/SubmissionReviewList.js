@@ -53,7 +53,6 @@ const SubmissionList = ({ reviews, classes, selectReview, selectedReview }) => {
       className={classes.listItem}
       onClick={() => {
         selectReview(review);
-        console.log(review.id);
       }}
       button
       selected={selectedReview && review.id === selectedReview.id}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Query } from 'react-apollo';
+import { Query, Subscription } from 'react-apollo';
 
 import {
   AppBar,
@@ -24,6 +24,7 @@ import {
   isAuthenticated,
 } from '../../apollo/client';
 import { MESSAGES_QUERY } from '../../apollo/queries';
+import { SUBMISSIONS_SUBSCRIPTION } from '../../apollo/subscriptions';
 import logo from '../../images/header-logo-msstate-libraries-white.png';
 
 const styles = theme => ({
@@ -81,6 +82,8 @@ class MenuBar extends Component {
     const open = Boolean(anchorEl);
     const user = getAuthenticatedUser();
 
+    let unsubscribe = null;
+
     return (
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
@@ -108,12 +111,25 @@ class MenuBar extends Component {
                 query={MESSAGES_QUERY}
                 variables={{ recipientId: user.id }}
               >
-                {({ data }) => {
-                  // console.log(user.id);
-                  let newMessageCount = 0;
-                  if (data && data.messages) {
+                {({ loading, data, subscribeToMore }) => {
+                  if (!loading) {
+                    console.log(data.messages);
+                    if (!unsubscribe) {
+                      unsubscribe = subscribeToMore({
+                        document: SUBMISSIONS_SUBSCRIPTION,
+                        variables: { recipientId: user.id },
+                        updateQuery: (prev, { subscriptionData }) => {
+                          if (!subscriptionData.data) return prev;
+                          const { submissionAdded } = subscriptionData.data;
+                          return {
+                            messages: [...prev.messages, submissionAdded],
+                          };
+                        },
+                      });
+                    }
+
                     const newMessages = data.messages.filter(msg => !msg.read);
-                    newMessageCount = newMessages.length;
+                    const newMessageCount = newMessages.length;
                     if (newMessageCount !== 0) {
                       return (
                         <>

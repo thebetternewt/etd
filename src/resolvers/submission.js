@@ -1,7 +1,9 @@
-import { PubSub, withFilter } from 'graphql-subscriptions';
+import { PubSub, withFilter } from 'apollo-server-express';
 import { Submission, SubmissionReview, Message } from '../models';
 
 const pubsub = new PubSub();
+
+const SUBMISSION_ADDED = 'SUBMISSION_ADDED';
 
 export default {
   SubmissionType: {
@@ -51,10 +53,7 @@ export default {
         content: `Submission #${submission.id} has been received.`,
       });
 
-      pubsub.publish('submissionAdded', {
-        message: newMessage,
-        recipientId: user.id,
-      });
+      pubsub.publish(SUBMISSION_ADDED, { submissionAdded: newMessage });
 
       return submission;
     },
@@ -67,9 +66,14 @@ export default {
   Subscription: {
     submissionAdded: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator('submissionAdded'),
+        () => pubsub.asyncIterator([SUBMISSION_ADDED]),
         (payload, variables) => {
-          return payload.recipientId === variables.recipientId;
+          console.log('payload:', payload.submissionAdded.recipientId);
+          console.log('variables:', variables);
+          return (
+            payload.submissionAdded.recipientId.toString() ===
+            variables.recipientId
+          );
         }
       ),
     },
