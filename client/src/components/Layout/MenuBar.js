@@ -80,7 +80,7 @@ class MenuBar extends Component {
     const open = Boolean(anchorEl);
     const user = getAuthenticatedUser();
 
-    let unsubscribe = null;
+    const unsubscribe = null;
 
     return (
       <AppBar position="fixed" color="primary" className={classes.appBar}>
@@ -107,7 +107,7 @@ class MenuBar extends Component {
                   if (loading) {
                     return <MailIcon />;
                   }
-                  if (!unsubscribe) {
+                  /* if (!unsubscribe) {
                     unsubscribe = subscribeToMore({
                       document: MESSAGES_SUBSCRIPTION,
                       variables: { recipientId: user.id },
@@ -119,7 +119,7 @@ class MenuBar extends Component {
                         };
                       },
                     });
-                  }
+                  } */
 
                   const { messages } = data;
                   const newMessages = messages.filter(msg => !msg.read);
