@@ -5,6 +5,10 @@
   "main": "index.js",
   "author": "Chris Eady",
   "license": "MIT",
+  "engines": {
+    "node": "11",
+    "yarn": "1.9.4"
+  },
   "scripts": {
     "client-install": "npm install --prefix client",
     "start": "node -r esm .",
