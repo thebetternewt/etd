@@ -56,6 +56,16 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
 
+// Server static assets if in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static('client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendfile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
 app.get('/api/submissions/:submissionId/:docPath', async (req, res) => {
   const { submissionId, docPath } = req.params;
   console.log('submissionId', submissionId);
@@ -183,16 +193,14 @@ server.applyMiddleware({ app });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
+const port = process.env.PORT || 4000;
+
 sequelize.authenticate().then(() => {
   console.log('Connected to database established successfully.');
-  httpServer.listen({ port: 4000 }, () => {
+  httpServer.listen({ port }, () => {
+    console.log(`🚀  GraphQL Server ready at http://__${server.graphqlPath}`);
     console.log(
-      `🚀  Server ready at http://localhost:4000${server.graphqlPath}`
-    );
-    console.log(
-      `🚀  Subscriptions ready at ws://localhost:4000${
-          server.subscriptionsPath
-      }`
+      `🚀  Subscriptions ready at ws://__${server.subscriptionsPath}`
     );
   });
 });
