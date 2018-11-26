@@ -20,17 +20,17 @@ export default gql`
 
   extend type Query {
     submissionReview(id: ID!): SubmissionReview
-    submissionReviews(submissionId: ID): [SubmissionReview!]!
+    submissionReviews(submissionId: ID, reviewerId: ID): [SubmissionReview!]!
   }
 
   extend type Mutation {
     addSubmissionReview(submissionId: ID!): SubmissionReview
     updateSubmissionReview(
       id: ID!
-      submissionId: ID!
-      status: SubmissionStatusType!
+      submissionId: ID
+      status: SubmissionStatusType
       comments: String
-      reviewerId: ID!
+      reviewerId: ID
       reviewedOn: String
     ): SubmissionReview
   }

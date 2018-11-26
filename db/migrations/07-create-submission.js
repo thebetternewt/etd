@@ -56,6 +56,8 @@ module.exports = {
         defaultValue: 1,
       },
       defenseDate: Sequelize.DATE,
+      documentPath: Sequelize.STRING,
+      rightsFormPath: Sequelize.STRING,
       readyForFinal: {
         allowNull: false,
         type: Sequelize.BOOLEAN,

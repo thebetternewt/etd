@@ -5,7 +5,7 @@ import MenuBar from './MenuBar';
 import SideDrawer from './SideDrawer';
 import { isAuthenticated } from '../../apollo/client';
 
-const drawerWidth = 320;
+const drawerWidth = 280;
 
 const styles = theme => ({
   content: {

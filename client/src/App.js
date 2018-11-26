@@ -6,12 +6,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Layout from './components/Layout';
 import PrivateRoute from './components/common/PrivateRoute';
-import SignIn from './components/Auth/SignIn';
+import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
-import SubmissionForm from './components/SubmissionForm';
+import GetSubmission from './components/EtdForm/GetSubmission';
+import EtdForm from './components/EtdForm';
+import UnassignedReviews from './components/UnassignedReviews';
 
 import theme from './muiTheme';
 import checkToken from './util/checkToken';
+import ReviewSubmission from './components/ReviewSubmission';
 
 // Check for token in LS
 checkToken();
@@ -24,12 +27,33 @@ const App = () => (
         <title>MSU ETD</title>
       </Helmet>
       <Layout>
-        <Route exact path="/" component={SignIn} />
+        <Route exact path="/" component={Auth} />
         <Switch>
           <PrivateRoute exact path="/dashboard" component={Dashboard} />
         </Switch>
         <Switch>
-          <PrivateRoute exact path="/submit" component={SubmissionForm} />
+          <PrivateRoute
+            exact
+            path="/unassigned"
+            component={UnassignedReviews}
+          />
+        </Switch>
+        <Switch>
+          <PrivateRoute exact path="/submit" component={EtdForm} />
+        </Switch>
+        <Switch>
+          <PrivateRoute
+            exact
+            path="/submit/:submissionId"
+            component={GetSubmission}
+          />
+        </Switch>
+        <Switch>
+          <PrivateRoute
+            exact
+            path="/review/:reviewId"
+            component={ReviewSubmission}
+          />
         </Switch>
       </Layout>
     </div>

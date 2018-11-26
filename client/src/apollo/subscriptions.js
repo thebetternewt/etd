@@ -1,13 +1,14 @@
 import { gql } from 'apollo-boost';
 
-const SUBMISSIONS_SUBSCRIPTION = gql`
-  subscription SubmissionAdded($recipientId: ID!) {
-    submissionAdded(recipientId: $recipientId) {
+const MESSAGES_SUBSCRIPTION = gql`
+  subscription NewMessage($recipientId: ID!) {
+    newMessage(recipientId: $recipientId) {
       id
       content
       createdAt
+      read
     }
   }
 `;
 
-export { SUBMISSIONS_SUBSCRIPTION };
+export { MESSAGES_SUBSCRIPTION }; // eslint-disable-line

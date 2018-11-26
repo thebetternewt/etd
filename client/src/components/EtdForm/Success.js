@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const styles = theme => ({
   form: {
@@ -17,7 +18,7 @@ const styles = theme => ({
   },
 });
 
-const Success = () => (
+const Success = ({ classes }) => (
   <>
     <Typography variant="h5" align="center">
       Thank you for your submission!
@@ -25,6 +26,15 @@ const Success = () => (
     <Typography variant="body1" align="center">
       You will get an email with further instructions.
     </Typography>
+    <Button
+      className={classes.formButton}
+      variant="contained"
+      color="primary"
+      component={Link}
+      to="/"
+    >
+      Go to dashboard
+    </Button>
   </>
 );
 

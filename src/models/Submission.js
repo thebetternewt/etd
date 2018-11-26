@@ -80,6 +80,18 @@ module.exports = (sequelize, DataTypes) => {
           isDate: true,
         },
       },
+      documentPath: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      rightsFormPath: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
       degreeId: {
         allowNull: false,
         type: DataTypes.INTEGER,

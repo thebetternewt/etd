@@ -5,6 +5,7 @@ const AUTH_QUERY = gql`
     isAuthenticated @client
     user @client {
       id
+      admin
     }
   }
 `;
@@ -91,25 +92,172 @@ const SEMESTERS_QUERY = gql`
 `;
 
 const SUBMISSIONS_QUERY = gql`
-  query Submissions($userId: ID) {
+  query SubmissionsQuery($userId: ID) {
     submissions(userId: $userId) {
       id
       title
+      updatedAt
       reviews {
         id
         submittedOn
         status
+        comments
+      }
+    }
+  }
+`;
+
+const SUBMISSION_QUERY = gql`
+  query SubmissionQuery($id: ID!) {
+    submission(id: $id) {
+      id
+      title
+      authorFirstName
+      authorMiddleNames
+      authorLastName
+      authorEmail
+      type
+      title
+      keywords
+      abstract
+      copyrightAgree
+      availability
+      restrictionYears
+      defenseDate
+      documentPath
+      rightsFormPath
+      user {
+        id
+        firstName
+        middleNames
+        lastName
+        netId
+        idNumber
+      }
+      degree {
+        id
+        name
+      }
+      department {
+        id
+        name
+        college {
+          id
+          name
+        }
+      }
+      semester {
+        id
+        name
+      }
+      surveyOfEarnedDoctorate {
+        id
+        confirmationNumber
+        completionDate
+      }
+    }
+  }
+`;
+
+const SUBMISSION_REVIEWS_QUERY = gql`
+  query SubmissionReviewsQuery($reviewerId: ID) {
+    submissionReviews(reviewerId: $reviewerId) {
+      id
+      submittedOn
+      status
+      submission {
+        id
+        title
+      }
+    }
+  }
+`;
+
+const SUBMISSION_REVIEW_QUERY = gql`
+  query SubmissionReviewsQuery($id: ID!) {
+    submissionReview(id: $id) {
+      id
+      submittedOn
+      status
+      comments
+      reviewer {
+        id
+        netId
+        firstName
+        lastName
+      }
+      submission {
+        id
+        title
+        authorFirstName
+        authorMiddleNames
+        authorLastName
+        authorEmail
+        type
+        title
+        keywords
+        abstract
+        copyrightAgree
+        availability
+        restrictionYears
+        defenseDate
+        documentPath
+        rightsFormPath
+        user {
+          id
+          firstName
+          middleNames
+          lastName
+          netId
+          idNumber
+        }
+        degree {
+          id
+          name
+        }
+        department {
+          id
+          name
+          college {
+            id
+            name
+          }
+        }
+        semester {
+          id
+          name
+        }
+        surveyOfEarnedDoctorate {
+          id
+          confirmationNumber
+          completionDate
+        }
+      }
+    }
+  }
+`;
+
+const UNASSIGNED_SUBMISSION_REVIEWS_QUERY = gql`
+  query UnassignedSubmissionReviewsQuery {
+    submissionReviews(reviewerId: null) {
+      id
+      submittedOn
+      status
+      submission {
+        id
+        title
       }
     }
   }
 `;
 
 const MESSAGES_QUERY = gql`
-  query Messages($recipientId: ID!) {
+  query MessagesQuery($recipientId: ID!) {
     messages(recipientId: $recipientId) {
       id
       content
       createdAt
+      read
     }
   }
 `;
@@ -124,5 +272,9 @@ export {
   DEGREES_QUERY,
   SEMESTERS_QUERY,
   SUBMISSIONS_QUERY,
+  SUBMISSION_QUERY,
+  SUBMISSION_REVIEWS_QUERY,
+  SUBMISSION_REVIEW_QUERY,
+  UNASSIGNED_SUBMISSION_REVIEWS_QUERY,
   MESSAGES_QUERY,
 };

@@ -196,7 +196,6 @@ class FormUserDetails extends Component {
             label="Defense Date"
             fullWidth
             format="MMM Do, YYYY"
-            disablePast
             className={classes.formControl}
             leftArrowIcon={<LeftArrowIcon />}
             rightArrowIcon={<RightArrowIcon />}

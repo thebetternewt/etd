@@ -47,7 +47,7 @@ const styles = theme => ({
   },
 });
 
-class FormPersonalDetails extends Component {
+class FormDocumentDetails extends Component {
   continue = e => {
     e.preventDefault();
     this.props.nextStep();
@@ -213,4 +213,4 @@ class FormPersonalDetails extends Component {
   }
 }
 
-export default withStyles(styles)(FormPersonalDetails);
+export default withStyles(styles)(FormDocumentDetails);

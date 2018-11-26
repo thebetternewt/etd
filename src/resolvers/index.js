@@ -1,3 +1,5 @@
+import { PubSub } from 'apollo-server-express';
+
 import user from './user';
 import submission from './submission';
 import college from './college';
@@ -9,6 +11,8 @@ import academicYear from './academicYear';
 import semester from './semester';
 import message from './message';
 import submissionReview from './submissionReview';
+
+export const pubsub = new PubSub();
 
 export default [
   user,

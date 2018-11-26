@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Query, Subscription } from 'react-apollo';
+import { Query, Mutation } from 'react-apollo';
 
 import {
   AppBar,
@@ -12,11 +12,8 @@ import {
   Menu,
   MenuItem,
   IconButton,
-  MenuList,
-  ListItem,
 } from '@material-ui/core';
 import MailIcon from '@material-ui/icons/Mail';
-// import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import {
   getAuthenticatedUser,
@@ -24,7 +21,8 @@ import {
   isAuthenticated,
 } from '../../apollo/client';
 import { MESSAGES_QUERY } from '../../apollo/queries';
-import { SUBMISSIONS_SUBSCRIPTION } from '../../apollo/subscriptions';
+import { READ_MESSAGE } from '../../apollo/mutations';
+import { MESSAGES_SUBSCRIPTION } from '../../apollo/subscriptions';
 import logo from '../../images/header-logo-msstate-libraries-white.png';
 
 const styles = theme => ({
@@ -94,13 +92,7 @@ class MenuBar extends Component {
               alt="Mississippi State University Libraries"
             />
           </Link>
-          {/* <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-          >
-            <MenuIcon />
-          </IconButton> */}
+
           <Typography variant="h6" color="inherit" className={classes.flex}>
             Thesis & Dissertation
           </Typography>
@@ -112,59 +104,99 @@ class MenuBar extends Component {
                 variables={{ recipientId: user.id }}
               >
                 {({ loading, data, subscribeToMore }) => {
-                  if (!loading) {
-                    console.log(data.messages);
-                    if (!unsubscribe) {
-                      unsubscribe = subscribeToMore({
-                        document: SUBMISSIONS_SUBSCRIPTION,
-                        variables: { recipientId: user.id },
-                        updateQuery: (prev, { subscriptionData }) => {
-                          if (!subscriptionData.data) return prev;
-                          const { submissionAdded } = subscriptionData.data;
-                          return {
-                            messages: [...prev.messages, submissionAdded],
-                          };
-                        },
-                      });
-                    }
-
-                    const newMessages = data.messages.filter(msg => !msg.read);
-                    const newMessageCount = newMessages.length;
-                    if (newMessageCount !== 0) {
-                      return (
-                        <>
-                          <IconButton
-                            aria-owns={openEl === 'messages'}
-                            aria-haspopup="true"
-                            onClick={this.handleMenu('messages')}
-                            color="inherit"
-                          >
-                            <Badge badgeContent={newMessageCount} color="error">
-                              <MailIcon />
-                            </Badge>
-                          </IconButton>
-                          <Menu
-                            id="messages-appbar"
-                            anchorEl={anchorEl}
-                            open={openEl === 'messages'}
-                            onClose={this.handleClose}
-                            className={classes.menu}
-                          >
-                            {newMessages.map(msg => (
-                              <MenuItem
-                                key={msg.id}
-                                className={classes.message}
-                                dense
-                              >
-                                {msg.content}
-                              </MenuItem>
-                            ))}
-                          </Menu>
-                        </>
-                      );
-                    }
+                  if (loading) {
+                    return <MailIcon />;
                   }
-                  return <MailIcon />;
+                  if (!unsubscribe) {
+                    unsubscribe = subscribeToMore({
+                      document: MESSAGES_SUBSCRIPTION,
+                      variables: { recipientId: user.id },
+                      updateQuery: (prev, { subscriptionData }) => {
+                        if (!subscriptionData.data) return prev;
+                        const { newMessage } = subscriptionData.data;
+                        return {
+                          messages: [newMessage, ...prev.messages],
+                        };
+                      },
+                    });
+                  }
+
+                  const { messages } = data;
+                  const newMessages = messages.filter(msg => !msg.read);
+                  const newMessageCount = newMessages.length;
+                  if (newMessageCount !== 0) {
+                    return (
+                      <Mutation mutation={READ_MESSAGE}>
+                        {updateMessage => (
+                          <>
+                            <IconButton
+                              aria-owns={openEl === 'messages'}
+                              aria-haspopup="true"
+                              onClick={this.handleMenu('messages')}
+                              color="inherit"
+                            >
+                              <Badge
+                                badgeContent={newMessageCount}
+                                color="error"
+                              >
+                                <MailIcon />
+                              </Badge>
+                            </IconButton>
+                            <Menu
+                              id="messages-appbar"
+                              anchorEl={anchorEl}
+                              open={openEl === 'messages'}
+                              onClose={() => {
+                                // Mark each message as read.
+                                messages.forEach(msg => {
+                                  updateMessage({
+                                    variables: { id: msg.id },
+                                    refetchQueries: ['MessagesQuery'],
+                                  });
+                                });
+                                this.handleClose();
+                              }}
+                              className={classes.menu}
+                            >
+                              {newMessages.map(msg => (
+                                <MenuItem
+                                  key={msg.id}
+                                  className={classes.message}
+                                  dense
+                                >
+                                  {msg.content}
+                                </MenuItem>
+                              ))}
+                            </Menu>
+                          </>
+                        )}
+                      </Mutation>
+                    );
+                  }
+                  return (
+                    <>
+                      <IconButton
+                        aria-owns={openEl === 'messages'}
+                        aria-haspopup="true"
+                        onClick={this.handleMenu('messages')}
+                        color="inherit"
+                      >
+                        <MailIcon />
+                      </IconButton>
+                      <Menu
+                        id="messages-appbar"
+                        anchorEl={anchorEl}
+                        open={openEl === 'messages'}
+                        onClose={this.handleClose}
+                        className={classes.menu}
+                      >
+                        <MenuItem className={classes.message} dense>
+                          No messages!
+                        </MenuItem>
+                        ))}
+                      </Menu>
+                    </>
+                  );
                 }}
               </Query>
               <IconButton

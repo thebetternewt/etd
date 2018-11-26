@@ -1,7 +1,6 @@
-import { PubSub, withFilter } from 'apollo-server-express';
+import { withFilter } from 'apollo-server-express';
 import { Submission, SubmissionReview, Message } from '../models';
-
-const pubsub = new PubSub();
+import { pubsub } from './index';
 
 const SUBMISSION_ADDED = 'SUBMISSION_ADDED';
 
@@ -32,8 +31,12 @@ export default {
     submissions: (root, { userId }, { user }) => {
       const searchParams = {};
 
-      searchParams.userId = user.id;
+      // If user not admin, restrict query to own submissions
+      if (!user.admin) {
+        searchParams.userId = user.id;
+      }
 
+      // If user admin, then allow for specific user submission query
       if (user.admin && userId) {
         searchParams.userId = userId;
       }
@@ -44,19 +47,17 @@ export default {
     },
   },
   Mutation: {
-    addSubmission: async (root, args, { user }) => {
-      const submission = await Submission.create({ ...args, userId: user.id });
-      await SubmissionReview.create({ submissionId: submission.id });
-      const newMessage = await Message.create({
-        submissionId: submission.id,
-        recipientId: user.id,
-        content: `Submission #${submission.id} has been received.`,
-      });
+    addSubmission: async (root, args, { user }) =>
+      Submission.create({ ...args, userId: user.id }),
+    // await SubmissionReview.create({ submissionId: submission.id });
+    // const newMessage = await Message.create({
+    //   submissionId: submission.id,
+    //   recipientId: user.id,
+    //   content: `Submission #${submission.id} has been received.`,
+    // });
 
-      pubsub.publish(SUBMISSION_ADDED, { submissionAdded: newMessage });
+    // pubsub.publish('NEW_MESSAGE', { newMessage });
 
-      return submission;
-    },
     updateSubmission: async (root, { id, ...args }) => {
       const submission = await Submission.findByPk(id);
       return submission.update(args);
@@ -67,14 +68,9 @@ export default {
     submissionAdded: {
       subscribe: withFilter(
         () => pubsub.asyncIterator([SUBMISSION_ADDED]),
-        (payload, variables) => {
-          console.log('payload:', payload.submissionAdded.recipientId);
-          console.log('variables:', variables);
-          return (
-            payload.submissionAdded.recipientId.toString() ===
-            variables.recipientId
-          );
-        }
+        (payload, variables) =>
+          payload.submissionAdded.recipientId.toString() ===
+          variables.recipientId
       ),
     },
   },

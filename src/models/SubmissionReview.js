@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: 'PENDING',
         validate: {
-          isIn: [['PENDING', 'ASSIGNED', 'COMPLETED']],
+          isIn: [['PENDING', 'ASSIGNED', 'APPROVED', 'CHANGES_REQUIRED']],
         },
       },
     },
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   SubmissionReview.associate = function(models) {
     this.belongsTo(models.Submission);
-    this.belongsTo(models.User, { foreignKey: 'reviewerId' });
+    this.belongsTo(models.User, { as: 'Reviewer', foreignKey: 'reviewerId' });
   };
   return SubmissionReview;
 };

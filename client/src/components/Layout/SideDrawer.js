@@ -12,7 +12,7 @@ import { CURRENT_USER_QUERY } from '../../apollo/queries';
 
 import { userItems, adminItems } from './SideDrawerItems';
 
-const drawerWidth = 320;
+const drawerWidth = 280;
 
 const styles = theme => ({
   drawerPaper: {

@@ -38,6 +38,9 @@ export default gql`
     surveyOfEarnedDoctorate: SurveyOfEarnedDoctorate
     messages: [Message!]!
     reviews: [SubmissionReview!]!
+    documentPath: String
+    rightsFormPath: String
+    updatedAt: String!
   }
 
   extend type Query {
@@ -63,6 +66,8 @@ export default gql`
       degreeId: ID!
       departmentId: ID!
       semesterId: ID!
+      documentPath: String
+      rightsFormPath: String
     ): Submission
     updateSubmission(
       id: ID!
@@ -86,6 +91,8 @@ export default gql`
       degreeId: ID
       departmentId: ID
       semesterId: ID
+      documentPath: String
+      rightsFormPath: String
     ): Submission
   }
 

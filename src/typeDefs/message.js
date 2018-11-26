@@ -22,4 +22,8 @@ export default gql`
     addMessage(content: String!, submissionId: ID!): Message
     updateMessage(id: ID!, read: Boolean): Message
   }
+
+  extend type Subscription {
+    newMessage(recipientId: ID!): Message
+  }
 `;
