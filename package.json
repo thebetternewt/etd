@@ -1,7 +1,7 @@
 {
   "name": "etd",
   "version": "1.0.0",
-  "description": "An electronic thesis & dissertation submissionn workflow application.",
+  "description": "An electronic thesis & dissertation submission workflow application.",
   "main": "index.js",
   "author": "Chris Eady",
   "license": "MIT",
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "node -r esm .",
+    "start": "NODE_ENV=production node -r esm .",
     "server": "NODE_ENV=development nodemon -r esm",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
