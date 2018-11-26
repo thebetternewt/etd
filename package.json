@@ -6,12 +6,12 @@
   "author": "Chris Eady",
   "license": "MIT",
   "engines": {
-    "node": "11",
-    "yarn": "1.9.4"
+    "node": "10",
+    "yarn": "1.12.1"
   },
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "NODE_ENV=production node -r esm .",
+    "start": "node -r esm .",
     "server": "NODE_ENV=development nodemon -r esm",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
