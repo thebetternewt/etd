@@ -17,8 +17,10 @@ const defaultState = {
 
 const authToken = localStorage.getItem('token');
 
+console.log(process.env.port);
+
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: '/graphql',
   credentials: 'same-origin',
 });
 
