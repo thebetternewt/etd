@@ -90,64 +90,68 @@ class AdminDashboard extends Component {
                   );
                 }
 
-                const { submissionReviews } = data;
-                const flattenedReviews = submissionReviews.map(review => ({
-                  ...review,
-                  submissionTitle: review.submission.title,
-                  submissionId: review.submission.id,
-                }));
-                const pendingReviews = flattenedReviews.filter(
-                  review => review.status === 'PENDING'
-                );
-                const completedReviews = flattenedReviews.filter(
-                  review => review.status !== 'PENDING'
-                );
+                if (data) {
+                  const { submissionReviews } = data;
+                  const flattenedReviews = submissionReviews.map(review => ({
+                    ...review,
+                    submissionTitle: review.submission.title,
+                    submissionId: review.submission.id,
+                  }));
+                  const pendingReviews = flattenedReviews.filter(
+                    review => review.status === 'PENDING'
+                  );
+                  const completedReviews = flattenedReviews.filter(
+                    review => review.status !== 'PENDING'
+                  );
 
-                if (flattenedReviews.length === 0) {
+                  if (flattenedReviews.length === 0) {
+                    return (
+                      <Typography variant="body1">
+                        No assigned reviews!
+                      </Typography>
+                    );
+                  }
+
                   return (
-                    <Typography variant="body1">
-                      No assigned reviews!
-                    </Typography>
+                    <>
+                      <SubmissionReviewList
+                        reviews={pendingReviews}
+                        selectReview={this.handleSelectReview}
+                      />
+
+                      {showCompleted ? (
+                        <>
+                          <Typography
+                            variant="h5"
+                            align="left"
+                            style={{ alignSelf: 'flex-start' }}
+                            gutterBottom
+                          >
+                            Completed Reviews{' '}
+                            <Button
+                              onClick={() => {
+                                this.toggleShowCompleted();
+                                this.clearSelection();
+                              }}
+                            >
+                              Hide
+                            </Button>
+                          </Typography>
+                          <SubmissionReviewList
+                            reviews={completedReviews}
+                            selectReview={this.handleSelectReview}
+                          />
+                        </>
+                      ) : (
+                        <Button onClick={this.toggleShowCompleted}>
+                          Show Completed
+                        </Button>
+                      )}
+                    </>
                   );
                 }
 
-                return (
-                  <>
-                    <SubmissionReviewList
-                      reviews={pendingReviews}
-                      selectReview={this.handleSelectReview}
-                    />
-
-                    {showCompleted ? (
-                      <>
-                        <Typography
-                          variant="h5"
-                          align="left"
-                          style={{ alignSelf: 'flex-start' }}
-                          gutterBottom
-                        >
-                          Completed Reviews{' '}
-                          <Button
-                            onClick={() => {
-                              this.toggleShowCompleted();
-                              this.clearSelection();
-                            }}
-                          >
-                            Hide
-                          </Button>
-                        </Typography>
-                        <SubmissionReviewList
-                          reviews={completedReviews}
-                          selectReview={this.handleSelectReview}
-                        />
-                      </>
-                    ) : (
-                      <Button onClick={this.toggleShowCompleted}>
-                        Show Completed
-                      </Button>
-                    )}
-                  </>
-                );
+                return null;
               }}
             </Query>
           </div>
