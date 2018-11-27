@@ -94,6 +94,7 @@ class Dashboard extends Component {
                 }
 
                 if (data) {
+                  console.log(data);
                   if (data.submissions.length === 0) {
                     return <Welcome />;
                   }
