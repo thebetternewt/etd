@@ -10,7 +10,9 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(config.use_env_variable[env]);
+  sequelize = new Sequelize(config.use_env_variable[env], {
+    dialect: config.dialect,
+  });
 } else {
   sequelize = new Sequelize(
     config.database,
