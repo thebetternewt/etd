@@ -1,4 +1,4 @@
-import bcryptjs from 'bcryptjs';
+const bcryptjs = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -84,7 +84,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  User.associate = function(models) {
+  User.associate = function (models) {
     this.hasMany(models.Submission);
     this.hasMany(models.SubmissionReview, {
       as: 'Reviews',
@@ -94,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   // Validate password authentication with bcrypt
-  User.prototype.isValidPassword = async function(password) {
+  User.prototype.isValidPassword = async function (password) {
     const user = this;
     const compare = await bcryptjs.compare(password, user.password);
     return compare;
