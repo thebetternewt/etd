@@ -103,7 +103,7 @@ class MenuBar extends Component {
                 query={MESSAGES_QUERY}
                 variables={{ recipientId: user.id }}
               >
-                {({ loading, data, subscribeToMore }) => {
+                {({ loading, data }) => {
                   if (loading) {
                     return <MailIcon />;
                   }
@@ -121,57 +121,59 @@ class MenuBar extends Component {
                     });
                   } */
 
-                  const { messages } = data;
-                  const newMessages = messages.filter(msg => !msg.read);
-                  const newMessageCount = newMessages.length;
-                  if (newMessageCount !== 0) {
-                    return (
-                      <Mutation mutation={READ_MESSAGE}>
-                        {updateMessage => (
-                          <>
-                            <IconButton
-                              aria-owns={openEl === 'messages'}
-                              aria-haspopup="true"
-                              onClick={this.handleMenu('messages')}
-                              color="inherit"
-                            >
-                              <Badge
-                                badgeContent={newMessageCount}
-                                color="error"
+                  if (data) {
+                    const { messages } = data;
+                    const newMessages = messages.filter(msg => !msg.read);
+                    const newMessageCount = newMessages.length;
+                    if (newMessageCount !== 0) {
+                      return (
+                        <Mutation mutation={READ_MESSAGE}>
+                          {updateMessage => (
+                            <>
+                              <IconButton
+                                aria-owns={openEl === 'messages'}
+                                aria-haspopup="true"
+                                onClick={this.handleMenu('messages')}
+                                color="inherit"
                               >
-                                <MailIcon />
-                              </Badge>
-                            </IconButton>
-                            <Menu
-                              id="messages-appbar"
-                              anchorEl={anchorEl}
-                              open={openEl === 'messages'}
-                              onClose={() => {
-                                // Mark each message as read.
-                                messages.forEach(msg => {
-                                  updateMessage({
-                                    variables: { id: msg.id },
-                                    refetchQueries: ['MessagesQuery'],
-                                  });
-                                });
-                                this.handleClose();
-                              }}
-                              className={classes.menu}
-                            >
-                              {newMessages.map(msg => (
-                                <MenuItem
-                                  key={msg.id}
-                                  className={classes.message}
-                                  dense
+                                <Badge
+                                  badgeContent={newMessageCount}
+                                  color="error"
                                 >
-                                  {msg.content}
-                                </MenuItem>
-                              ))}
-                            </Menu>
-                          </>
-                        )}
-                      </Mutation>
-                    );
+                                  <MailIcon />
+                                </Badge>
+                              </IconButton>
+                              <Menu
+                                id="messages-appbar"
+                                anchorEl={anchorEl}
+                                open={openEl === 'messages'}
+                                onClose={() => {
+                                  // Mark each message as read.
+                                  messages.forEach(msg => {
+                                    updateMessage({
+                                      variables: { id: msg.id },
+                                      refetchQueries: ['MessagesQuery'],
+                                    });
+                                  });
+                                  this.handleClose();
+                                }}
+                                className={classes.menu}
+                              >
+                                {newMessages.map(msg => (
+                                  <MenuItem
+                                    key={msg.id}
+                                    className={classes.message}
+                                    dense
+                                  >
+                                    {msg.content}
+                                  </MenuItem>
+                                ))}
+                              </Menu>
+                            </>
+                          )}
+                        </Mutation>
+                      );
+                    }
                   }
                   return (
                     <>
