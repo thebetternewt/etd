@@ -1,6 +1,6 @@
-import { College } from '../models';
+const { College } = require('../models');
 
-export default {
+module.exports = {
   College: {
     departments: college => college.getDepartments(),
   },

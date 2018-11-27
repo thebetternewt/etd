@@ -1,6 +1,6 @@
-import { SurveyOfEarnedDoctorate } from '../models';
+const { SurveyOfEarnedDoctorate } = require('../models');
 
-export default {
+module.exports = {
   SurveyOfEarnedDoctorate: {
     submission: sed => sed.getSubmission(),
   },

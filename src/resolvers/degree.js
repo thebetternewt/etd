@@ -1,6 +1,6 @@
-import { Degree } from '../models';
+const { Degree } = require('../models');
 
-export default {
+module.exports = {
   Degree: {
     submissions: degree => degree.getSubmissions(),
   },

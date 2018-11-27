@@ -1,11 +1,6 @@
-import { withFilter } from 'apollo-server-express';
-import { pubsub } from './index';
+const { Message } = require('../models');
 
-import { Message } from '../models';
-
-const NEW_MESSAGE = 'NEW_MESSAGE';
-
-export default {
+module.exports = {
   Message: {
     submission: message => message.getSubmission(),
     recipient: message => message.getRecipient(),
@@ -33,20 +28,6 @@ export default {
     updateMessage: async (root, { id, ...args }) => {
       const message = await Message.findByPk(id);
       return message.update(args);
-    },
-  },
-  Subscription: {
-    newMessage: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator([NEW_MESSAGE]),
-        (payload, variables) => {
-          console.log('payload:', payload.newMessage.recipientId);
-          console.log('variables:', variables);
-          return (
-            payload.newMessage.recipientId.toString() === variables.recipientId
-          );
-        }
-      ),
     },
   },
 };

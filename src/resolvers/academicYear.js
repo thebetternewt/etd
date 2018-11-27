@@ -1,6 +1,6 @@
-import { AcademicYear } from '../models';
+const { AcademicYear } = require('../models');
 
-export default {
+module.exports = {
   AcademicYear: {
     semesters: year => year.getSemesters(),
   },

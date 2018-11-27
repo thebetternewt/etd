@@ -1,6 +1,6 @@
-import { CommitteeMember } from '../models';
+const { CommitteeMember } = require('../models');
 
-export default {
+module.exports = {
   CommitteeMember: {
     submission: member => member.getSubmission(),
   },

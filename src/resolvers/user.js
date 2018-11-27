@@ -1,11 +1,8 @@
-import Sequelize from 'sequelize';
-import jwt from 'jsonwebtoken';
-import { AuthenticationError } from 'apollo-server-express';
-import { User, Message } from '../models';
+const jwt = require('jsonwebtoken');
+const { AuthenticationError } = require('apollo-server-express');
+const { User } = require('../models');
 
-const { Op } = Sequelize;
-
-export default {
+module.exports = {
   User: {
     submissions: user => user.getSubmissions(),
     messages: async user =>

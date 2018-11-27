@@ -1,17 +1,17 @@
-import root from './root';
-import user from './user';
-import submission from './submission';
-import college from './college';
-import department from './department';
-import degree from './degree';
-import surveyOfEarnedDoctorate from './surveyOfEarnedDoctorate';
-import committeeMember from './committeeMember';
-import academicYear from './academicYear';
-import semester from './semester';
-import message from './message';
-import submissionReview from './submissionReview';
+const root = require('./root');
+const user = require('./user');
+const submission = require('./submission');
+const college = require('./college');
+const department = require('./department');
+const degree = require('./degree');
+const surveyOfEarnedDoctorate = require('./surveyOfEarnedDoctorate');
+const committeeMember = require('./committeeMember');
+const academicYear = require('./academicYear');
+const semester = require('./semester');
+const message = require('./message');
+const submissionReview = require('./submissionReview');
 
-export default [
+module.exports = [
   root,
   user,
   submission,

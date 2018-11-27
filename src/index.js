@@ -1,21 +1,21 @@
 // dotenv loaded in models/index.js
 
-import express from 'express';
-import cors from 'cors';
-import multer from 'multer';
-import jwt from 'jsonwebtoken';
-import bodyParser from 'body-parser';
+const express = require('express');
+const cors = require('cors');
+const multer = require('multer');
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 
-import path from 'path';
-import fs from 'fs';
-import http from 'http';
-import { express as voyagerMiddleware } from 'graphql-voyager/middleware';
-import { ApolloServer } from 'apollo-server-express';
+const path = require('path');
+const fs = require('fs');
+const http = require('http');
+const voyagerMiddleware = require('graphql-voyager/middleware').express;
+const { ApolloServer } = require('apollo-server-express');
 
-import typeDefs from './typeDefs';
-import resolvers from './resolvers';
+const typeDefs = require('./typeDefs');
+const resolvers = require('./resolvers');
 
-import { sequelize, User, Submission } from './models';
+const { sequelize, User, Submission } = require('./models');
 
 const getUserFromToken = async req => {
   // get the user token from the headers

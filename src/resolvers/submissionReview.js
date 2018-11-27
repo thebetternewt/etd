@@ -1,6 +1,6 @@
-import { SubmissionReview } from '../models';
+const { SubmissionReview } = require('../models');
 
-export default {
+module.exports = {
   SubmissionStatusType: {
     PENDING: 'PENDING',
     ASSIGNED: 'ASSIGNED',

@@ -1,10 +1,6 @@
-import { withFilter } from 'apollo-server-express';
-import { Submission, SubmissionReview, Message } from '../models';
-import { pubsub } from './index';
+const { Submission } = require('../models');
 
-const SUBMISSION_ADDED = 'SUBMISSION_ADDED';
-
-export default {
+module.exports = {
   SubmissionType: {
     THESIS: 'THESIS',
     DISSERTATION: 'DISSERTATION',
@@ -61,17 +57,6 @@ export default {
     updateSubmission: async (root, { id, ...args }) => {
       const submission = await Submission.findByPk(id);
       return submission.update(args);
-    },
-  },
-
-  Subscription: {
-    submissionAdded: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator([SUBMISSION_ADDED]),
-        (payload, variables) =>
-          payload.submissionAdded.recipientId.toString() ===
-          variables.recipientId
-      ),
     },
   },
 };

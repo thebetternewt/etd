@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express';
+const { gql } = require('apollo-server-express');
 
-export default gql`
+module.exports = gql`
   enum SubmissionType {
     THESIS
     DISSERTATION
@@ -94,9 +94,5 @@ export default gql`
       documentPath: String
       rightsFormPath: String
     ): Submission
-  }
-
-  extend type Subscription {
-    submissionAdded(recipientId: ID!): Message
   }
 `;
