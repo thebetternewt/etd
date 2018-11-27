@@ -93,129 +93,133 @@ class Dashboard extends Component {
                   );
                 }
 
-                if (data.submissions.length === 0) {
-                  return <Welcome />;
-                }
+                if (data) {
+                  if (data.submissions.length === 0) {
+                    return <Welcome />;
+                  }
 
-                const reviews = [];
+                  const reviews = [];
 
-                const drafts = data.submissions.filter(
-                  sub => sub.reviews.length === 0
-                );
+                  const drafts = data.submissions.filter(
+                    sub => sub.reviews.length === 0
+                  );
 
-                // Flatten reviews with submission data
-                data.submissions.forEach(submission => {
-                  const subReviews = submission.reviews.map(review => ({
-                    ...review,
-                    submissionTitle: submission.title,
-                  }));
-                  reviews.push(...subReviews);
-                });
+                  // Flatten reviews with submission data
+                  data.submissions.forEach(submission => {
+                    const subReviews = submission.reviews.map(review => ({
+                      ...review,
+                      submissionTitle: submission.title,
+                    }));
+                    reviews.push(...subReviews);
+                  });
 
-                const awaitingReview = reviews.filter(
-                  review => review.status === 'PENDING'
-                );
+                  const awaitingReview = reviews.filter(
+                    review => review.status === 'PENDING'
+                  );
 
-                const actionRequired = reviews.filter(
-                  review => review.status === 'CHANGES_REQUIRED'
-                );
+                  const actionRequired = reviews.filter(
+                    review => review.status === 'CHANGES_REQUIRED'
+                  );
 
-                const approvedReviews = reviews.filter(
-                  review => review.status === 'APPROVED'
-                );
+                  const approvedReviews = reviews.filter(
+                    review => review.status === 'APPROVED'
+                  );
 
-                return (
-                  <>
-                    {drafts.length > 0 && (
-                      <>
-                        <Typography
-                          variant="h5"
-                          style={{ alignSelf: 'flex-start' }}
-                          gutterBottom
-                        >
-                          Drafts
-                        </Typography>
-                        <SubmissionDraftList
-                          drafts={drafts}
-                          selectDraft={this.handleSelectDraft}
-                          selectedDraft={selectedDraft}
-                        />
-                      </>
-                    )}
-                    {actionRequired.length > 0 && (
-                      <>
-                        <Typography
-                          variant="h5"
-                          style={{ alignSelf: 'flex-start' }}
-                          gutterBottom
-                        >
-                          Action Required
-                        </Typography>
-                        <SubmissionReviewList
-                          reviews={actionRequired}
-                          selectReview={this.handleSelectReview}
-                          selectedReview={selectedReview}
-                        />
-                      </>
-                    )}
-                    {awaitingReview.length > 0 && (
-                      <>
-                        <Typography
-                          variant="h5"
-                          style={{ alignSelf: 'flex-start' }}
-                          gutterBottom
-                        >
-                          Awaiting Review
-                        </Typography>
-                        <SubmissionReviewList
-                          reviews={awaitingReview}
-                          selectReview={this.handleSelectReview}
-                          selectedReview={selectedReview}
-                        />
-                      </>
-                    )}
-
-                    <Button
-                      component={Link}
-                      to="/submit"
-                      variant="contained"
-                      color="primary"
-                      style={{ marginBottom: '2rem' }}
-                    >
-                      Create New Submission
-                    </Button>
-
-                    {approvedReviews.length > 0 &&
-                      (showApproved ? (
+                  return (
+                    <>
+                      {drafts.length > 0 && (
                         <>
                           <Typography
                             variant="h5"
-                            align="left"
                             style={{ alignSelf: 'flex-start' }}
                             gutterBottom
                           >
-                            Approved Reviews{' '}
-                            <Button
-                              onClick={() => {
-                                this.toggleShowApproved();
-                                this.clearSelection();
-                              }}
-                            >
-                              Hide
-                            </Button>
+                            Drafts
                           </Typography>
-                          <SubmissionReviewList
-                            reviews={approvedReviews}
-                            selectReview={this.handleSelectReview}
+                          <SubmissionDraftList
+                            drafts={drafts}
+                            selectDraft={this.handleSelectDraft}
+                            selectedDraft={selectedDraft}
                           />
                         </>
-                      ) : (
-                        <Button onClick={this.toggleShowApproved}>
-                          Show Approved
-                        </Button>
-                      ))}
-                  </>
-                );
+                      )}
+                      {actionRequired.length > 0 && (
+                        <>
+                          <Typography
+                            variant="h5"
+                            style={{ alignSelf: 'flex-start' }}
+                            gutterBottom
+                          >
+                            Action Required
+                          </Typography>
+                          <SubmissionReviewList
+                            reviews={actionRequired}
+                            selectReview={this.handleSelectReview}
+                            selectedReview={selectedReview}
+                          />
+                        </>
+                      )}
+                      {awaitingReview.length > 0 && (
+                        <>
+                          <Typography
+                            variant="h5"
+                            style={{ alignSelf: 'flex-start' }}
+                            gutterBottom
+                          >
+                            Awaiting Review
+                          </Typography>
+                          <SubmissionReviewList
+                            reviews={awaitingReview}
+                            selectReview={this.handleSelectReview}
+                            selectedReview={selectedReview}
+                          />
+                        </>
+                      )}
+
+                      <Button
+                        component={Link}
+                        to="/submit"
+                        variant="contained"
+                        color="primary"
+                        style={{ marginBottom: '2rem' }}
+                      >
+                        Create New Submission
+                      </Button>
+
+                      {approvedReviews.length > 0 &&
+                        (showApproved ? (
+                          <>
+                            <Typography
+                              variant="h5"
+                              align="left"
+                              style={{ alignSelf: 'flex-start' }}
+                              gutterBottom
+                            >
+                              Approved Reviews{' '}
+                              <Button
+                                onClick={() => {
+                                  this.toggleShowApproved();
+                                  this.clearSelection();
+                                }}
+                              >
+                                Hide
+                              </Button>
+                            </Typography>
+                            <SubmissionReviewList
+                              reviews={approvedReviews}
+                              selectReview={this.handleSelectReview}
+                            />
+                          </>
+                        ) : (
+                          <Button onClick={this.toggleShowApproved}>
+                            Show Approved
+                          </Button>
+                        ))}
+                    </>
+                  );
+                }
+
+                return null;
               }}
             </Query>
           </div>

@@ -37,7 +37,7 @@ export const adminItems = path => (
         <ListItemText primary="Unassigned" />
         <Query query={UNASSIGNED_SUBMISSION_REVIEWS_QUERY}>
           {({ loading, data }) => {
-            if (!loading) {
+            if (!loading && data) {
               return (
                 <Chip label={data.submissionReviews.length} color="secondary" />
               );
