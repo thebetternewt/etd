@@ -1,21 +1,19 @@
 // dotenv loaded in models/index.js
 
 const express = require('express');
-const cors = require('cors');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 
 const path = require('path');
 const fs = require('fs');
-const http = require('http');
 const voyagerMiddleware = require('graphql-voyager/middleware').express;
 const { ApolloServer } = require('apollo-server-express');
 
 const typeDefs = require('./typeDefs');
 const resolvers = require('./resolvers');
 
-const { sequelize, User, Submission } = require('./models');
+const { sequelize, User } = require('./models');
 
 const getUserFromToken = async req => {
   // get the user token from the headers
@@ -45,18 +43,10 @@ const server = new ApolloServer({
     // add the user to the context
     return { user };
   },
-  subscriptions: {
-    onConnect: (connectionParams, websocket) => {
-      console.log('connectionParams:', connectionParams);
-    },
-  },
 });
 const app = express();
-app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.text());
 
-// Server static assets if in production
+// Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
   app.use(express.static('client/build'));
@@ -66,27 +56,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.text());
+
 app.get('/api/submissions/:submissionId/:docPath', async (req, res) => {
   const { submissionId, docPath } = req.params;
-  console.log('submissionId', submissionId);
-  console.log('docPath', docPath);
-  console.log(req.headers);
-  // try {
-  // const submission = await Submission.findByPk(submissionId);
-  // const user = getUserFromToken(req);
-  // console.log('userId from subReq:', user.id);
-  // if (!user.admin && user.id !== submission.userId) {
-  //   return res.status(400);
-  // }
-
-  const fullPath = path.join(
-    // __dirname,
-    // '..',
-    'data',
-    'submissions',
-    submissionId,
-    docPath
-  );
+  const fullPath = path.join('data', 'submissions', submissionId, docPath);
   const file = fs.createReadStream(fullPath);
 
   /* eslint-disable */
@@ -112,12 +87,6 @@ app.get('/api/submissions/:submissionId/:docPath', async (req, res) => {
   /* eslint-enable */
 
   file.pipe(res);
-  // return res.send(fullPath);
-  // console.log(fullPath);
-  // return res.download(fullPath);
-  // } catch (err) {
-  //   console.log(err);
-  // }
 });
 
 // Multer settings
@@ -149,11 +118,8 @@ const submissionUpload = multer({
   limits: { fileSize: 200 * 1024 * 1024 },
   fileFilter,
 }).any();
-// .fields([{ name: 'etd', maxCount: 1 }, { name: 'rights', maxCount: 1 }]);
 
 app.post('/api/upload-submission/:submissionId', (req, res) => {
-  console.log('posted to upload-submission...');
-
   const { submissionId } = req.params;
   const path = `data/submissions/${submissionId}`;
 
@@ -175,8 +141,8 @@ app.post('/api/upload-submission/:submissionId', (req, res) => {
     res.send(filename);
   });
 });
+
 app.delete('/api/upload-submission/:submissionId', (req, res) => {
-  console.log('delete to upload-submission');
   const { submissionId } = req.params;
   const filename = req.body;
   fs.unlink(`data/submissions/${submissionId}/${filename}`, err => {
@@ -190,18 +156,12 @@ app.use('/voyager', voyagerMiddleware({ endpointUrl: '/graphql' }));
 
 server.applyMiddleware({ app });
 
-const httpServer = http.createServer(app);
-server.installSubscriptionHandlers(httpServer);
-
 const port = process.env.PORT || 4000;
 
 sequelize.authenticate().then(() => {
   console.log('Connected to database established successfully.');
-  httpServer.listen({ port }, () => {
-    console.log(`🚀  GraphQL Server ready at http://__${server.graphqlPath}`);
-    console.log(
-      `🚀  Subscriptions ready at ws://__${server.subscriptionsPath}`
-    );
+  app.listen(port, () => {
+    console.log(`🚀  Server ready at localhost:${port}${server.graphqlPath}`);
   });
 });
 
