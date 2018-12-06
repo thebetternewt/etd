@@ -80,7 +80,7 @@ const Review = ({
                           variables: { id: reviewId, reviewerId: user.id },
                           refetchQueries: [
                             'UnassignedSubmissionReviewsQuery',
-                            'SubmissionReviews',
+                            'SubmissionReviewsQuery',
                           ],
                         });
                         showAlert();

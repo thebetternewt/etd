@@ -156,7 +156,10 @@ module.exports = (sequelize, DataTypes) => {
     this.hasOne(models.SurveyOfEarnedDoctorate);
     this.hasMany(models.CommitteeMember);
     this.hasMany(models.Message);
-    this.hasMany(models.SubmissionReview, { as: 'Reviews' });
+    this.hasMany(models.SubmissionReview, {
+      as: 'Reviews',
+      foreignKey: 'submissionId',
+    });
   };
   return Submission;
 };
